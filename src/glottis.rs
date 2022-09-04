@@ -1,4 +1,5 @@
 use std::f32::consts::PI;
+use serde::{Serialize, Deserialize};
 
 use crate::{
     math::interpolate,
@@ -6,6 +7,8 @@ use crate::{
     noise_gen::NoiseGenerator,
 };
 
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Glottis {
     pub always_voice: bool,
     pub auto_wobble: bool,
@@ -27,7 +30,16 @@ pub struct Glottis {
     new_tenseness: f32,
     old_frequency: f32,
     new_frequency: f32,
+
+//    #[serde(skip)]
+    //#[serde(default = "Option::None")]
+//    #[serde(deserialize_with = "null_to_default")]
+//    #[serde(skip_serializing)]
+//    #[serde(skip_deserializing)]
+//    aspiration_noise_source1: Option<Box<dyn FnMut() -> f64 + Send + 'static>>,
+    #[serde(skip)]
     aspiration_noise_source: Box<dyn FnMut() -> f64 + Send + 'static>,
+
     waveform_length: f32,
 
     // waveform state
@@ -64,7 +76,14 @@ impl Glottis {
             new_tenseness: 0.6,
             old_frequency: 140.0,
             new_frequency: 140.0,
-
+/*
+            aspiration_noise_source: Some(noise::new_filtered_noise_source(
+                500.0,
+                0.5,
+                sample_rate,
+                0x8000,
+                rng,
+            )),*/
             aspiration_noise_source: noise::new_filtered_noise_source(
                 500.0,
                 0.5,
@@ -104,6 +123,11 @@ impl Glottis {
         }
 
         let out1 = self.normalized_lf_waveform(self.time_in_waveform / self.waveform_length);
+/*        let asp_noise = 
+        match self.aspiration_noise_source.as_mut() {
+            Some(f) => (f)() as f32,
+            None => 0.0
+        };*/
         let asp_noise = (self.aspiration_noise_source)() as f32;
         let aspiration1 = self.intensity
             * (1.0 - self.target_tenseness.sqrt())

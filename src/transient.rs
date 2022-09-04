@@ -1,3 +1,7 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Transient {
     pub position: usize,
     pub start_time: f32,

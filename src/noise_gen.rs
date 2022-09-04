@@ -1,4 +1,11 @@
+use serde::{Serialize, Deserialize};
+use serde_big_array::big_array;
+
+big_array! { BigArray; N }
+
 #[derive(Copy, Clone)]
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct Grad {
     pub x: f32, pub y: f32, pub z: f32
 }
@@ -30,8 +37,12 @@ const P: [u8; 256] = [
     236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180,
 ];
 
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct NoiseGenerator {
+    #[serde(with = "BigArray")]
     grad_p: [Grad; 512],
+    #[serde(with = "BigArray")]
     perm: [u8; 512],
 }
 

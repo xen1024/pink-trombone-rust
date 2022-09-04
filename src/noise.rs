@@ -16,6 +16,7 @@ pub fn new_filtered_noise_source(
     Box::new(move || filter.filter(white_noise.noise()))
 }
 
+
 fn new_looped_white_noise(
     loop_size: usize,
     rng: &mut dyn NoiseSource<f64>,

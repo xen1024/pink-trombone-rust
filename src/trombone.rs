@@ -5,9 +5,13 @@ use crate::{
     turbulence::TurbulencePoint,
 };
 
+use serde::{Serialize};
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PinkTrombone {
-    shaper: TractShaper,
-    sample_rate: u32,
+    pub shaper: TractShaper,
+    pub sample_rate: u32,
 }
 
 impl PinkTrombone {

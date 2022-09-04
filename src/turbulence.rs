@@ -1,3 +1,7 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TurbulencePoint {
     pub diameter: f32,
     pub position: f32,

@@ -4,33 +4,57 @@ use crate::noise::{self, NoiseSource};
 use crate::transient::Transient;
 use crate::turbulence::TurbulencePoint;
 
+use serde_big_array::big_array;
+use serde::{Serialize, Deserialize};
+
+big_array! { BigArray; N }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Tract {
     pub glottis: Glottis,
     sample_rate: u32,
+
+    #[serde(skip)]
     frication_noise_source: Box<dyn FnMut() -> f64 + Send + 'static>,
 
     sample_count: usize,
     pub time: f32,
 
+    #[serde(with = "BigArray")]
     left: [f64; Tract::N],
+    #[serde(with = "BigArray")]
     right: [f64; Tract::N],
+    #[serde(with = "BigArray")]
     reflection: [f64; Tract::N],
+    #[serde(with = "BigArray")]
     new_reflection: [f64; Tract::N],
+    #[serde(with = "BigArray")]
     junction_output_right: [f64; Tract::N],
+    #[serde(with = "BigArray")]
     justion_output_left: [f64; Tract::N + 1],
+    #[serde(with = "BigArray")]
     max_amplitude: [f64; Tract::N],
     /// vocal tract cell diameters
+    #[serde(with = "BigArray")]
     pub diameter: [f64; Tract::N],
 
     pub transients: Vec<Transient>,
     pub turbulence_points: Vec<TurbulencePoint>,
 
+    #[serde(with = "BigArray")]
     nose_right: [f64; NOSE_LEN],
+    #[serde(with = "BigArray")]
     nose_left: [f64; NOSE_LEN],
+    #[serde(with = "BigArray")]
     nose_junction_output_right: [f64; NOSE_LEN],
+    #[serde(with = "BigArray")]
     nose_junction_output_left: [f64; NOSE_LEN + 1],
+    #[serde(with = "BigArray")]
     nose_reflection: [f64; NOSE_LEN],
+    #[serde(with = "BigArray")]
     pub nose_diameter: [f64; NOSE_LEN],
+    #[serde(with = "BigArray")]
     nose_max_amplitude: [f64; NOSE_LEN],
 
     reflection_left: f64,

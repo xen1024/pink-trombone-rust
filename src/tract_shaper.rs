@@ -2,10 +2,18 @@ use std::f64::consts::PI;
 
 use crate::{math, tract::Tract, transient::Transient};
 
+use serde_big_array::big_array;
+use serde::{Serialize};
+
+big_array! { BigArray; N }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TractShaper {
     pub tract: Tract,
     velum_open_target: f32,
     velum_closed_target: f32,
+    #[serde(with = "BigArray")]
     target_diameter: [f64; Tract::N],
     velum_target: f32,
     pub tongue_index: f64,
