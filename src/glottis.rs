@@ -1,13 +1,15 @@
 use std::f32::consts::PI;
 use serde::{Serialize, Deserialize};
+use schemars::{JsonSchema};
 
 use crate::{
     math::interpolate,
     noise::{self, NoiseSource},
     noise_gen::NoiseGenerator,
+//    noise_gen::NoiseGenerator1,
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Glottis {
     pub always_voice: bool,
@@ -19,6 +21,7 @@ pub struct Glottis {
     pub vibrato_frequency: f32,
 
     noise_generator: NoiseGenerator,
+//    noise_generator: NoiseGenerator1,
 
     sample_rate: u32,
     sample_count: u64,
@@ -32,10 +35,6 @@ pub struct Glottis {
     new_frequency: f32,
 
 //    #[serde(skip)]
-    //#[serde(default = "Option::None")]
-//    #[serde(deserialize_with = "null_to_default")]
-//    #[serde(skip_serializing)]
-//    #[serde(skip_deserializing)]
 //    aspiration_noise_source1: Option<Box<dyn FnMut() -> f64 + Send + 'static>>,
     #[serde(skip)]
     aspiration_noise_source: Box<dyn FnMut() -> f64 + Send + 'static>,

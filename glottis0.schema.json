@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Glottis",
+  "type": "object",
+  "required": [
+    "alpha",
+    "alwaysVoice",
+    "autoWobble",
+    "delta",
+    "e0",
+    "epsilon",
+    "intensity",
+    "isTouched",
+    "loudness",
+    "newFrequency",
+    "newTenseness",
+    "noiseGenerator",
+    "oldFrequency",
+    "oldTenseness",
+    "omega",
+    "sampleCount",
+    "sampleRate",
+    "shift",
+    "smoothFrequency",
+    "targetFrequency",
+    "targetTenseness",
+    "te",
+    "timeInWaveform",
+    "vibratoAmount",
+    "vibratoFrequency",
+    "waveformLength"
+  ],
+  "properties": {
+    "alpha": {
+      "type": "number",
+      "format": "float"
+    },
+    "alwaysVoice": {
+      "type": "boolean"
+    },
+    "autoWobble": {
+      "type": "boolean"
+    },
+    "delta": {
+      "type": "number",
+      "format": "float"
+    },
+    "e0": {
+      "type": "number",
+      "format": "float"
+    },
+    "epsilon": {
+      "type": "number",
+      "format": "float"
+    },
+    "intensity": {
+      "type": "number",
+      "format": "float"
+    },
+    "isTouched": {
+      "type": "boolean"
+    },
+    "loudness": {
+      "type": "number",
+      "format": "float"
+    },
+    "newFrequency": {
+      "type": "number",
+      "format": "float"
+    },
+    "newTenseness": {
+      "type": "number",
+      "format": "float"
+    },
+    "noiseGenerator": {
+      "$ref": "#/definitions/NoiseGenerator"
+    },
+    "oldFrequency": {
+      "type": "number",
+      "format": "float"
+    },
+    "oldTenseness": {
+      "type": "number",
+      "format": "float"
+    },
+    "omega": {
+      "type": "number",
+      "format": "float"
+    },
+    "sampleCount": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "sampleRate": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    },
+    "shift": {
+      "type": "number",
+      "format": "float"
+    },
+    "smoothFrequency": {
+      "type": "number",
+      "format": "float"
+    },
+    "targetFrequency": {
+      "type": "number",
+      "format": "float"
+    },
+    "targetTenseness": {
+      "type": "number",
+      "format": "float"
+    },
+    "te": {
+      "type": "number",
+      "format": "float"
+    },
+    "timeInWaveform": {
+      "type": "number",
+      "format": "float"
+    },
+    "vibratoAmount": {
+      "type": "number",
+      "format": "float"
+    },
+    "vibratoFrequency": {
+      "type": "number",
+      "format": "float"
+    },
+    "waveformLength": {
+      "type": "number",
+      "format": "float"
+    }
+  },
+  "definitions": {
+    "Grad": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "format": "float"
+        },
+        "y": {
+          "type": "number",
+          "format": "float"
+        },
+        "z": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "NoiseGenerator": {
+      "type": "object",
+      "required": [
+        "gradP",
+        "perm"
+      ],
+      "properties": {
+        "gradP": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Grad"
+          },
+          "maxItems": 16,
+          "minItems": 16
+        },
+        "perm": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          },
+          "maxItems": 16,
+          "minItems": 16
+        }
+      }
+    }
+  }
+}

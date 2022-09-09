@@ -1,10 +1,12 @@
 use serde::{Serialize, Deserialize};
 use serde_big_array::big_array;
+use schemars::{JsonSchema};
 
 big_array! { BigArray; N }
 
 #[derive(Copy, Clone)]
 #[derive(Serialize, Deserialize)]
+#[derive(JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct Grad {
     pub x: f32, pub y: f32, pub z: f32
@@ -36,7 +38,7 @@ const P: [u8; 256] = [
     214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138,
     236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180,
 ];
-
+/*
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NoiseGenerator {
@@ -44,6 +46,19 @@ pub struct NoiseGenerator {
     grad_p: [Grad; 512],
     #[serde(with = "BigArray")]
     perm: [u8; 512],
+}*/
+
+#[derive(Serialize)] //, Deserialize
+#[serde(rename_all = "camelCase")]
+#[derive(JsonSchema)]
+pub struct NoiseGenerator {
+//    grad_p: Vec<Grad>,
+//    perm: Vec<u8>,
+//    grad_p: [Grad; 512],
+//    perm: [u8; 512],
+//#[serde(serialize_with = "<[_]>::serialize")]
+    grad_p: [Grad; 16],
+    perm: [u8; 16],
 }
 
 impl NoiseGenerator {
@@ -68,10 +83,12 @@ impl NoiseGenerator {
 
     pub fn new(seed: u16) -> NoiseGenerator {
         let mut gen = NoiseGenerator {
-            grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 512],
-            perm: [0; 512],
+//            grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 512],
+//            perm: [0; 512],
+            grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 16],
+            perm: [0; 16],
         };
-        gen.set_seed(seed);
+//        gen.set_seed(seed);
         gen
     }
 
