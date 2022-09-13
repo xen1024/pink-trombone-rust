@@ -5,9 +5,10 @@ use schemars::{JsonSchema};
 big_array! { BigArray; N }
 
 #[derive(Copy, Clone)]
-#[derive(Serialize, Deserialize)]
 #[derive(JsonSchema)]
+#[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "GradJSON")]
 struct Grad {
     pub x: f32, pub y: f32, pub z: f32
 }
@@ -48,9 +49,10 @@ pub struct NoiseGenerator {
     perm: [u8; 512],
 }*/
 
+#[derive(JsonSchema)]
 #[derive(Serialize)] //, Deserialize
 #[serde(rename_all = "camelCase")]
-#[derive(JsonSchema)]
+#[serde(rename = "NoiseGeneratorJSON")]
 pub struct NoiseGenerator {
 //    grad_p: Vec<Grad>,
 //    perm: Vec<u8>,
@@ -60,6 +62,13 @@ pub struct NoiseGenerator {
     grad_p: [Grad; 16],
     perm: [u8; 16],
 }
+/*
+#[cfg(feature = "schema")]
+#[derive(Serialize)] //, Deserialize
+#[serde(rename_all = "camelCase")]
+#[derive(JsonSchema)]
+pub struct NoiseGenerator {
+}*/
 
 impl NoiseGenerator {
     pub fn set_seed(&mut self, mut seed: u16) {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Glottis",
+  "title": "GlottisJSON",
   "type": "object",
   "required": [
     "alpha",
@@ -73,7 +73,7 @@
       "format": "float"
     },
     "noiseGenerator": {
-      "$ref": "#/definitions/NoiseGenerator"
+      "$ref": "#/definitions/NoiseGeneratorJSON"
     },
     "oldFrequency": {
       "type": "number",
@@ -135,7 +135,7 @@
     }
   },
   "definitions": {
-    "Grad": {
+    "GradJSON": {
       "type": "object",
       "required": [
         "x",
@@ -157,7 +157,7 @@
         }
       }
     },
-    "NoiseGenerator": {
+    "NoiseGeneratorJSON": {
       "type": "object",
       "required": [
         "gradP",
@@ -167,7 +167,7 @@
         "gradP": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Grad"
+            "$ref": "#/definitions/GradJSON"
           },
           "maxItems": 16,
           "minItems": 16

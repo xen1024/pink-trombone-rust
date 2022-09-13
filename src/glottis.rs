@@ -9,8 +9,10 @@ use crate::{
 //    noise_gen::NoiseGenerator1,
 };
 
-#[derive(Serialize, JsonSchema)]
+#[derive(JsonSchema)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "GlottisJSON")]
 pub struct Glottis {
     pub always_voice: bool,
     pub auto_wobble: bool,

@@ -4,17 +4,25 @@ use crate::{math, tract::Tract, transient::Transient};
 
 use serde_big_array::big_array;
 use serde::{Serialize};
+use schemars::{JsonSchema};
 
 big_array! { BigArray; N }
 
+#[derive(JsonSchema)]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "TractShaperJSON")]
 pub struct TractShaper {
     pub tract: Tract,
     velum_open_target: f32,
     velum_closed_target: f32,
-    #[serde(with = "BigArray")]
+
+//    #[serde(with = "BigArray")]
     target_diameter: [f64; Tract::N],
+
+//    #[cfg(feature = "schema")]
+//    target_diameter: [f64; Tract::N],
+
     velum_target: f32,
     pub tongue_index: f64,
     pub tongue_diameter: f64,

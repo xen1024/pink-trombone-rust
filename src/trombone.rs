@@ -6,9 +6,12 @@ use crate::{
 };
 
 use serde::{Serialize};
+use schemars::{JsonSchema};
 
+#[derive(JsonSchema)]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "PinkTromboneJSON")]
 pub struct PinkTrombone {
     pub shaper: TractShaper,
     pub sample_rate: u32,

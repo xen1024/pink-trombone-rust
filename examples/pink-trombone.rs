@@ -1,7 +1,7 @@
 use std::sync::{Arc, Mutex};
 use tracing::{debug, error, info, trace, warn};
 
-use pink_trombone::{NoiseSource, PinkTrombone, Glottis};
+use pink_trombone::{NoiseSource, PinkTrombone, Glottis, Tract, TractShaper};
 use rand::Rng;
 use rodio::{OutputStream, Source};
 
@@ -97,13 +97,13 @@ fn generate_test_data() {
     let sample_rate = SAMPLE_RATE;
     let mut rng = random;
     let glottis = Glottis::new(sample_rate, &mut rng, seed);
-/*
-    std::fs::write(output_path_glottis1,serde_json::to_string_pretty(&glottis).unwrap(),).unwrap();
+
+//    std::fs::write(output_path_glottis1,serde_json::to_string_pretty(&glottis).unwrap(),).unwrap();
 
     let trombone = PinkTrombone::new(SAMPLE_RATE, &mut rng, seed);
 
     std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
-
+/*
     std::fs::write(output_path_tract_shape0,serde_json::to_string_pretty(&trombone.shaper).unwrap()).unwrap();
     std::fs::write(output_path_tract0,serde_json::to_string_pretty(&trombone.shaper.tract).unwrap()).unwrap();
     std::fs::write(output_path_glottis0,serde_json::to_string_pretty(&trombone.shaper.tract.glottis).unwrap()).unwrap();
@@ -125,6 +125,20 @@ fn generate_test_data() {
 
     let schema = schema_for!(Glottis);
     std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+
+    let output_path_trombone_schema0 = "trombone.schema.json";
+    let output_path_tract_schema0 = "tract.schema.json";
+    let output_path_tractshaper_schema0 = "tract-shaper.schema.json";
+
+    let schema = schema_for!(PinkTrombone);
+    std::fs::write(output_path_trombone_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+
+    let schema = schema_for!(Tract);
+    std::fs::write(output_path_tract_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+
+    let schema = schema_for!(TractShaper);
+    std::fs::write(output_path_tractshaper_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+
 
     trace!("DONE")
 }

@@ -1,7 +1,10 @@
 use serde::{Serialize, Deserialize};
+use schemars::{JsonSchema};
 
+#[derive(JsonSchema)]
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "TurbulencePointJSON")]
 pub struct TurbulencePoint {
     pub diameter: f32,
     pub position: f32,

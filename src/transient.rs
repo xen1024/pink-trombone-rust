@@ -1,7 +1,10 @@
 use serde::{Serialize, Deserialize};
+use schemars::{JsonSchema};
 
+#[derive(JsonSchema)]
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "TransientJSON")]
 pub struct Transient {
     pub position: usize,
     pub start_time: f32,

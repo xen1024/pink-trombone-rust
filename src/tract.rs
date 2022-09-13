@@ -6,11 +6,14 @@ use crate::turbulence::TurbulencePoint;
 
 use serde_big_array::big_array;
 use serde::{Serialize, Deserialize};
+use schemars::{JsonSchema};
 
 big_array! { BigArray; N }
 
+#[derive(JsonSchema)]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(rename = "TractJSON")]
 pub struct Tract {
     pub glottis: Glottis,
     sample_rate: u32,
@@ -20,7 +23,7 @@ pub struct Tract {
 
     sample_count: usize,
     pub time: f32,
-
+/*
     #[serde(with = "BigArray")]
     left: [f64; Tract::N],
     #[serde(with = "BigArray")]
@@ -38,10 +41,21 @@ pub struct Tract {
     /// vocal tract cell diameters
     #[serde(with = "BigArray")]
     pub diameter: [f64; Tract::N],
+*/
+    left: [f64; Tract::N],
+    right: [f64; Tract::N],
+    reflection: [f64; Tract::N],
+    new_reflection: [f64; Tract::N],
+    junction_output_right: [f64; Tract::N],
+    justion_output_left: [f64; Tract::N + 1],
+    max_amplitude: [f64; Tract::N],
+    /// vocal tract cell diameters
+    pub diameter: [f64; Tract::N],
+
 
     pub transients: Vec<Transient>,
     pub turbulence_points: Vec<TurbulencePoint>,
-
+/*
     #[serde(with = "BigArray")]
     nose_right: [f64; NOSE_LEN],
     #[serde(with = "BigArray")]
@@ -55,6 +69,14 @@ pub struct Tract {
     #[serde(with = "BigArray")]
     pub nose_diameter: [f64; NOSE_LEN],
     #[serde(with = "BigArray")]
+    nose_max_amplitude: [f64; NOSE_LEN],
+*/
+    nose_right: [f64; NOSE_LEN],
+    nose_left: [f64; NOSE_LEN],
+    nose_junction_output_right: [f64; NOSE_LEN],
+    nose_junction_output_left: [f64; NOSE_LEN + 1],
+    nose_reflection: [f64; NOSE_LEN],
+    pub nose_diameter: [f64; NOSE_LEN],
     nose_max_amplitude: [f64; NOSE_LEN],
 
     reflection_left: f64,
@@ -70,11 +92,16 @@ const N: usize = Tract::N;
 const GLOTTAL_REFLECTION: f64 = 0.75;
 const LIP_REFLECTION: f64 = -0.85;
 
-const NOSE_LEN: usize = 28;
+//const NOSE_LEN: usize = 28; // orig
+
+const NOSE_LEN: usize = 12;
+
 const NOSE_START: usize = N - NOSE_LEN + 1;
 
 impl Tract {
-    pub const N: usize = 44;
+//    pub const N: usize = 44; // orig
+    pub const N: usize = 16;
+
     pub const BLADE_START: usize = 10;
     pub const TIP_START: usize = 32;
     pub const LIP_START: usize = 39;
