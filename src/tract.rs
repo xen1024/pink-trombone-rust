@@ -10,7 +10,7 @@ use schemars::{JsonSchema};
 
 big_array! { BigArray; N }
 
-#[derive(JsonSchema)]
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "TractJSON")]

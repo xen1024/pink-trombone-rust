@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use schemars::{JsonSchema};
 
-#[derive(JsonSchema)]
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "TurbulencePointJSON")]

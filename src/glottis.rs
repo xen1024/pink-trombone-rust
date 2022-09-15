@@ -9,7 +9,7 @@ use crate::{
 //    noise_gen::NoiseGenerator1,
 };
 
-#[derive(JsonSchema)]
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "GlottisJSON")]

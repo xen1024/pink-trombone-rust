@@ -74,6 +74,7 @@ const SAMPLE_RATE: u32 = 48000;
 
 // io test data [
 
+
 #[derive(JsonSchema, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InputOutputBuffer {
@@ -115,31 +116,39 @@ fn generate_test_data() {
 
     std::fs::write(output_path, serde_json::to_string_pretty(&iodata).unwrap(),).unwrap();
 
-    // 0 - InputOutputBuffer
 */
+
+    trace!("DONE")
+}
+
+//#[cfg(feature = "jsonse")]
+fn generate_schemas() {
+
 //    let schema = schema_for!(InputOutputBuffer);
 //    println!("{}", serde_json::to_string_pretty(&schema).unwrap());
 //    std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
-    // 1 - Glottis
+/*
+    if cfg!(feature = "jsonse") {
 
-    let schema = schema_for!(Glottis);
-    std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+        let schema = schema_for!(Glottis);
+        std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
-    let output_path_trombone_schema0 = "trombone.schema.json";
-    let output_path_tract_schema0 = "tract.schema.json";
-    let output_path_tractshaper_schema0 = "tract-shaper.schema.json";
+        let output_path_trombone_schema0 = "trombone.schema.json";
+        let output_path_tract_schema0 = "tract.schema.json";
+        let output_path_tractshaper_schema0 = "tract-shaper.schema.json";
 
-    let schema = schema_for!(PinkTrombone);
-    std::fs::write(output_path_trombone_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+        let schema = schema_for!(PinkTrombone);
+        std::fs::write(output_path_trombone_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
-    let schema = schema_for!(Tract);
-    std::fs::write(output_path_tract_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+        let schema = schema_for!(Tract);
+        std::fs::write(output_path_tract_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
-    let schema = schema_for!(TractShaper);
-    std::fs::write(output_path_tractshaper_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
-
-
+        let schema = schema_for!(TractShaper);
+        std::fs::write(output_path_tractshaper_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
+    
+    }
+*/
     trace!("DONE")
 }
 
@@ -147,6 +156,7 @@ fn generate_test_data() {
 
 fn main() {
 
+    generate_schemas();
     generate_test_data();
 
     let mut random = ThreadRng {};

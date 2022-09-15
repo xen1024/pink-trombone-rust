@@ -5,7 +5,7 @@ use schemars::{JsonSchema};
 big_array! { BigArray; N }
 
 #[derive(Copy, Clone)]
-#[derive(JsonSchema)]
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "GradJSON")]
@@ -49,26 +49,25 @@ pub struct NoiseGenerator {
     perm: [u8; 512],
 }*/
 
+#[cfg(feature = "jsonse")]
 #[derive(JsonSchema)]
-#[derive(Serialize)] //, Deserialize
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "NoiseGeneratorJSON")]
 pub struct NoiseGenerator {
-//    grad_p: Vec<Grad>,
-//    perm: Vec<u8>,
-//    grad_p: [Grad; 512],
-//    perm: [u8; 512],
-//#[serde(serialize_with = "<[_]>::serialize")]
     grad_p: [Grad; 16],
     perm: [u8; 16],
 }
-/*
-#[cfg(feature = "schema")]
-#[derive(Serialize)] //, Deserialize
+
+#[cfg(not(feature = "jsonse"))]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-#[derive(JsonSchema)]
 pub struct NoiseGenerator {
-}*/
+    #[serde(with = "BigArray")]
+    grad_p: [Grad; 512],
+    #[serde(with = "BigArray")]
+    perm: [u8; 512],
+}
 
 impl NoiseGenerator {
     pub fn set_seed(&mut self, mut seed: u16) {
@@ -90,14 +89,23 @@ impl NoiseGenerator {
         }
     }
 
+    #[cfg(feature = "jsonse")]
     pub fn new(seed: u16) -> NoiseGenerator {
         let mut gen = NoiseGenerator {
-//            grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 512],
-//            perm: [0; 512],
             grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 16],
             perm: [0; 16],
         };
 //        gen.set_seed(seed);
+        gen
+    }
+
+    #[cfg(not(feature = "jsonse"))]
+    pub fn new(seed: u16) -> NoiseGenerator {
+        let mut gen = NoiseGenerator {
+            grad_p: [Grad{x:0.0, y: 0.0, z:0.0}; 512],
+            perm: [0; 512],
+        };
+        gen.set_seed(seed);
         gen
     }
 

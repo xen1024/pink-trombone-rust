@@ -8,7 +8,7 @@ use crate::{
 use serde::{Serialize};
 use schemars::{JsonSchema};
 
-#[derive(JsonSchema)]
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "PinkTromboneJSON")]
