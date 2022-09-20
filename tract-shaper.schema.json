@@ -69,6 +69,7 @@
         "oldFrequency",
         "oldTenseness",
         "omega",
+        "random",
         "sampleCount",
         "sampleRate",
         "shift",
@@ -137,6 +138,16 @@
         "omega": {
           "type": "number",
           "format": "float"
+        },
+        "random": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/NoiseSourceJSON"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "sampleCount": {
           "type": "integer",
@@ -232,6 +243,21 @@
           },
           "maxItems": 16,
           "minItems": 16
+        }
+      }
+    },
+    "NoiseSourceJSON": {
+      "type": "object",
+      "required": [
+        "randoms"
+      ],
+      "properties": {
+        "randoms": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
         }
       }
     },

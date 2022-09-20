@@ -1,6 +1,7 @@
 use std::f32::consts::PI;
 use serde::{Serialize, Deserialize};
 use schemars::{JsonSchema};
+use noise::ThreadRng;
 
 use crate::{
     math::interpolate,
@@ -21,6 +22,8 @@ pub struct Glottis {
     pub target_frequency: f32,
     pub vibrato_amount: f32,
     pub vibrato_frequency: f32,
+
+    pub random: Option<ThreadRng>,
 
     noise_generator: NoiseGenerator,
 //    noise_generator: NoiseGenerator1,
@@ -63,6 +66,8 @@ impl Glottis {
             target_frequency: 140.0,
             vibrato_amount: 0.005,
             vibrato_frequency: 6.0,
+
+            random: None,
 
             noise_generator: NoiseGenerator::new(seed),
 

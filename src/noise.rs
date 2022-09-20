@@ -1,4 +1,32 @@
 use std::f64::consts::PI;
+use serde::{Serialize, Deserialize};
+use rand::Rng;
+use schemars::{JsonSchema};
+
+#[cfg_attr(feature = "jsonse", derive(JsonSchema))]
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(rename = "NoiseSourceJSON")]
+pub struct ThreadRng {
+    pub randoms: Vec<f64>,
+}
+
+impl ThreadRng {
+    pub fn new() -> ThreadRng {
+        ThreadRng {
+            randoms: Vec::new()
+        }
+    }
+}
+
+impl NoiseSource<f64> for ThreadRng {
+    fn noise(&mut self) -> f64 {
+        let mut rng = rand::thread_rng();
+        let v = rng.gen();
+        self.randoms.push(v);
+        v
+    }
+}
 
 pub trait NoiseSource<T> {
     fn noise(&mut self) -> T;

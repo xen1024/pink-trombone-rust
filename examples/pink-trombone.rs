@@ -1,7 +1,7 @@
 use std::sync::{Arc, Mutex};
 use tracing::{debug, error, info, trace, warn};
 
-use pink_trombone::{NoiseSource, PinkTrombone, Glottis, Tract, TractShaper};
+use pink_trombone::{ThreadRng, PinkTrombone, Glottis, Tract, TractShaper};
 use rand::Rng;
 use rodio::{OutputStream, Source};
 
@@ -10,15 +10,6 @@ use serde_big_array::big_array;
 use schemars::{schema_for, JsonSchema};
 
 big_array! { BigArray; N }
-
-struct ThreadRng {}
-
-impl NoiseSource<f64> for ThreadRng {
-    fn noise(&mut self) -> f64 {
-        let mut rng = rand::thread_rng();
-        rng.gen()
-    }
-}
 
 #[derive(Clone)]
 struct PinkTromboneSource {
@@ -88,22 +79,28 @@ fn generate_test_data() {
     let output_path_glottis0 = "glottis0.json";
     let output_path_glottis1 = "glottis1.json";
     let output_path_trombone0 = "trombone0.json";
+
     let output_path_tract_shape0 = "tract_shape0.json";
     let output_path_tract0 = "tract0.json";
-    let output_path_glottis_schema0 = "glottis0.schema.json";
 
-    let mut random = ThreadRng {};
     let seed = rand::thread_rng().gen();
 
+    let mut rng = ThreadRng::new();
     let sample_rate = SAMPLE_RATE;
-    let mut rng = random;
-    let glottis = Glottis::new(sample_rate, &mut rng, seed);
+    let mut glottis = Glottis::new(sample_rate, &mut rng, seed);
 
-//    std::fs::write(output_path_glottis1,serde_json::to_string_pretty(&glottis).unwrap(),).unwrap();
+    glottis.random = Some(rng);
 
+    // GLOTTIS
+    std::fs::write(output_path_glottis1,serde_json::to_string_pretty(&glottis).unwrap(),).unwrap();
+
+    let mut rng = ThreadRng::new();
+
+    // TROMBONE
     let trombone = PinkTrombone::new(SAMPLE_RATE, &mut rng, seed);
 
-    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
+//    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
+
 /*
     std::fs::write(output_path_tract_shape0,serde_json::to_string_pretty(&trombone.shaper).unwrap()).unwrap();
     std::fs::write(output_path_tract0,serde_json::to_string_pretty(&trombone.shaper.tract).unwrap()).unwrap();
@@ -128,8 +125,9 @@ fn generate_schemas() {
 //    println!("{}", serde_json::to_string_pretty(&schema).unwrap());
 //    std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
-/*
     if cfg!(feature = "jsonse") {
+
+        let output_path_glottis_schema0 = "glottis0.schema.json";
 
         let schema = schema_for!(Glottis);
         std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
@@ -148,7 +146,7 @@ fn generate_schemas() {
         std::fs::write(output_path_tractshaper_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
     
     }
-*/
+
     trace!("DONE")
 }
 
@@ -159,7 +157,7 @@ fn main() {
     generate_schemas();
     generate_test_data();
 
-    let mut random = ThreadRng {};
+    let mut random = ThreadRng::new();
     let seed = rand::thread_rng().gen();
     let trombone = PinkTrombone::new(SAMPLE_RATE, &mut random, seed);
     let source = PinkTromboneSource::new(trombone);
