@@ -6,7 +6,7 @@ use schemars::{JsonSchema};
 #[cfg_attr(feature = "jsonse", derive(JsonSchema))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-#[serde(rename = "NoiseSourceJSON")]
+#[serde(rename = "ThreadRngJSON")]
 pub struct ThreadRng {
     pub randoms: Vec<f64>,
 }

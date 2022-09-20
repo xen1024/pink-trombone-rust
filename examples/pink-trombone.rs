@@ -126,7 +126,7 @@ fn generate_schemas() {
 //    std::fs::write(output_path_glottis_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
 
     if cfg!(feature = "jsonse") {
-
+/*
         let output_path_glottis_schema0 = "glottis0.schema.json";
 
         let schema = schema_for!(Glottis);
@@ -144,7 +144,7 @@ fn generate_schemas() {
 
         let schema = schema_for!(TractShaper);
         std::fs::write(output_path_tractshaper_schema0,serde_json::to_string_pretty(&schema).unwrap()).unwrap();
-    
+*/
     }
 
     trace!("DONE")

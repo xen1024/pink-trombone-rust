@@ -28,6 +28,8 @@ pub struct Glottis {
     noise_generator: NoiseGenerator,
 //    noise_generator: NoiseGenerator1,
 
+    pub seed: u16,
+
     sample_rate: u32,
     sample_count: u64,
     pub intensity: f32,
@@ -70,6 +72,8 @@ impl Glottis {
             random: None,
 
             noise_generator: NoiseGenerator::new(seed),
+
+            seed,
 
             sample_rate,
 

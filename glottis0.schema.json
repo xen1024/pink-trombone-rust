@@ -21,6 +21,7 @@
     "random",
     "sampleCount",
     "sampleRate",
+    "seed",
     "shift",
     "smoothFrequency",
     "targetFrequency",
@@ -91,7 +92,7 @@
     "random": {
       "anyOf": [
         {
-          "$ref": "#/definitions/NoiseSourceJSON"
+          "$ref": "#/definitions/ThreadRngJSON"
         },
         {
           "type": "null"
@@ -106,6 +107,11 @@
     "sampleRate": {
       "type": "integer",
       "format": "uint32",
+      "minimum": 0.0
+    },
+    "seed": {
+      "type": "integer",
+      "format": "uint16",
       "minimum": 0.0
     },
     "shift": {
@@ -195,7 +201,7 @@
         }
       }
     },
-    "NoiseSourceJSON": {
+    "ThreadRngJSON": {
       "type": "object",
       "required": [
         "randoms"
