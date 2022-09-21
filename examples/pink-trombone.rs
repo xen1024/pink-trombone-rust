@@ -97,9 +97,11 @@ fn generate_test_data() {
     let mut rng = ThreadRng::new();
 
     // TROMBONE
-    let trombone = PinkTrombone::new(SAMPLE_RATE, &mut rng, seed);
+    let mut trombone = PinkTrombone::new(SAMPLE_RATE, &mut rng, seed);
 
-//    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
+    trombone.shaper.tract.glottis.random = Some(rng);
+
+    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
 
 /*
     std::fs::write(output_path_tract_shape0,serde_json::to_string_pretty(&trombone.shaper).unwrap()).unwrap();

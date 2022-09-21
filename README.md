@@ -22,6 +22,22 @@ You can easily connect Pink Trombone to any audio framework, that accepts
 `f32` inputs. [An example](examples/pink-trombone.rs) for
 [rodio](https://github.com/RustAudio/rodio).
 
+### Export JSON
+
+See example/pink-trombone.rs generate_test_data
+
+```
+make json
+```
+
+### Export JSON-schema for quicktype.io
+
+See example/pink-trombone.rs generate_schemas 
+
+```
+make schema
+```
+
 ## Bibliographic references cited by Neil Thapen
 
 - Julius O. Smith III, "Physical audio signal processing for virtual musical instruments and audio effects."<br>
