@@ -23,60 +23,90 @@ pub struct Tract {
 
     sample_count: usize,
     pub time: f32,
-/*
+
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     left: [f64; Tract::N],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     right: [f64; Tract::N],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     reflection: [f64; Tract::N],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     new_reflection: [f64; Tract::N],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     junction_output_right: [f64; Tract::N],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     justion_output_left: [f64; Tract::N + 1],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     max_amplitude: [f64; Tract::N],
     /// vocal tract cell diameters
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     pub diameter: [f64; Tract::N],
-*/
+
+    #[cfg(feature = "jsonse")]
     left: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
     right: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
     reflection: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
     new_reflection: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
     junction_output_right: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
     justion_output_left: [f64; Tract::N + 1],
+    #[cfg(feature = "jsonse")]
     max_amplitude: [f64; Tract::N],
     /// vocal tract cell diameters
+    #[cfg(feature = "jsonse")]
     pub diameter: [f64; Tract::N],
 
 
     pub transients: Vec<Transient>,
     pub turbulence_points: Vec<TurbulencePoint>,
-/*
+
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_right: [f64; NOSE_LEN],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_left: [f64; NOSE_LEN],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_junction_output_right: [f64; NOSE_LEN],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_junction_output_left: [f64; NOSE_LEN + 1],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_reflection: [f64; NOSE_LEN],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     pub nose_diameter: [f64; NOSE_LEN],
+    #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
     nose_max_amplitude: [f64; NOSE_LEN],
-*/
+
+    #[cfg(feature = "jsonse")]
     nose_right: [f64; NOSE_LEN],
+    #[cfg(feature = "jsonse")]
     nose_left: [f64; NOSE_LEN],
+    #[cfg(feature = "jsonse")]
     nose_junction_output_right: [f64; NOSE_LEN],
+    #[cfg(feature = "jsonse")]
     nose_junction_output_left: [f64; NOSE_LEN + 1],
+    #[cfg(feature = "jsonse")]
     nose_reflection: [f64; NOSE_LEN],
+    #[cfg(feature = "jsonse")]
     pub nose_diameter: [f64; NOSE_LEN],
+    #[cfg(feature = "jsonse")]
     nose_max_amplitude: [f64; NOSE_LEN],
 
     reflection_left: f64,
@@ -92,14 +122,19 @@ const N: usize = Tract::N;
 const GLOTTAL_REFLECTION: f64 = 0.75;
 const LIP_REFLECTION: f64 = -0.85;
 
-//const NOSE_LEN: usize = 28; // orig
+#[cfg(not(feature = "jsonse"))]
+const NOSE_LEN: usize = 28; // orig
 
+#[cfg(feature = "jsonse")]
 const NOSE_LEN: usize = 12;
 
 const NOSE_START: usize = N - NOSE_LEN + 1;
 
 impl Tract {
-//    pub const N: usize = 44; // orig
+    #[cfg(not(feature = "jsonse"))]
+    pub const N: usize = 44; // orig
+
+    #[cfg(feature = "jsonse")]
     pub const N: usize = 16;
 
     pub const BLADE_START: usize = 10;

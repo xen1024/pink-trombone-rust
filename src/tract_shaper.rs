@@ -17,11 +17,12 @@ pub struct TractShaper {
     velum_open_target: f32,
     velum_closed_target: f32,
 
-//    #[serde(with = "BigArray")]
+    #[cfg(not(feature = "jsonse"))]
+    #[serde(with = "BigArray")]
     target_diameter: [f64; Tract::N],
 
-//    #[cfg(feature = "schema")]
-//    target_diameter: [f64; Tract::N],
+    #[cfg(feature = "jsonse")]
+    target_diameter: [f64; Tract::N],
 
     velum_target: f32,
     pub tongue_index: f64,
