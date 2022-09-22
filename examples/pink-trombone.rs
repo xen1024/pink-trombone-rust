@@ -15,12 +15,12 @@ big_array! { BigArray; N }
 struct PinkTromboneSource {
     trombone: Arc<Mutex<PinkTrombone>>,
     buffer_pos: usize,
-    buffer: [f32; 512],
+    buffer: [f64; 512],
 }
 
 impl PinkTromboneSource {
     pub fn new(trombone: PinkTrombone) -> PinkTromboneSource {
-        let buffer = [0_f32; 512];
+        let buffer = [0_f64; 512];
         PinkTromboneSource {
             trombone: Arc::new(Mutex::new(trombone)),
             buffer_pos: buffer.len(),
@@ -39,7 +39,7 @@ impl Iterator for PinkTromboneSource {
         let result = self.buffer[self.buffer_pos];
         assert!(result.abs() <= 1.0);
         self.buffer_pos += 1;
-        Some(result)
+        Some(result as f32)
     }
 }
 
@@ -171,7 +171,7 @@ fn main() {
 /*    for tone in 0..24 {
         {
             let mut src = source.trombone.lock().unwrap();
-            src.set_musical_note(tone as f32);
+            src.set_musical_note(tone as f64);
         }
         std::thread::sleep(std::time::Duration::from_millis(300));
     }
@@ -179,7 +179,7 @@ fn main() {
     for tone in (0..23).rev() {
         {
             let mut src = source.trombone.lock().unwrap();
-            src.set_musical_note(tone as f32);
+            src.set_musical_note(tone as f64);
         }
         std::thread::sleep(std::time::Duration::from_millis(300));
     }*/

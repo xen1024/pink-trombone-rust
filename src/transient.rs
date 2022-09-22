@@ -7,8 +7,8 @@ use schemars::{JsonSchema};
 #[serde(rename = "TransientJSON")]
 pub struct Transient {
     pub position: usize,
-    pub start_time: f32,
-    pub life_time: f32,
+    pub start_time: f64,
+    pub life_time: f64,
     pub strength: f64,
     pub exponent: f64,
 }

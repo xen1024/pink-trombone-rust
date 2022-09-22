@@ -19,7 +19,7 @@ Screenshot:<br/>
 # Sample code
 
 You can easily connect Pink Trombone to any audio framework, that accepts
-`f32` inputs. [An example](examples/pink-trombone.rs) for
+`f64` inputs. [An example](examples/pink-trombone.rs) for
 [rodio](https://github.com/RustAudio/rodio).
 
 ### Export JSON

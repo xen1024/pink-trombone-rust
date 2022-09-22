@@ -10,11 +10,11 @@ big_array! { BigArray; N }
 #[serde(rename_all = "camelCase")]
 #[serde(rename = "GradJSON")]
 struct Grad {
-    pub x: f32, pub y: f32, pub z: f32
+    pub x: f64, pub y: f64, pub z: f64
 }
 
 impl Grad {
-    pub fn dot2(&self, x: f32, y: f32) -> f32 { self.x * x + self.y * y }
+    pub fn dot2(&self, x: f64, y: f64) -> f64 { self.x * x + self.y * y }
 }
 
 const GRAD3: [Grad; 12] = [
@@ -109,20 +109,20 @@ impl NoiseGenerator {
         gen
     }
 
-    pub fn simplex(&mut self, x: f32) -> f32 { self.simplex2(x * 1.2, -x * 0.7) }
+    pub fn simplex(&mut self, x: f64) -> f64 { self.simplex2(x * 1.2, -x * 0.7) }
 
-    fn simplex2(&mut self, xin: f32, yin: f32) -> f32 {
+    fn simplex2(&mut self, xin: f64, yin: f64) -> f64 {
         // Skewing and unskewing factors for 2, 3, and 4 dimensions
-        let f2: f32 = 0.5 * (3.0_f32.sqrt() - 1.0);
-        let g2: f32 = (3.0 - 3.0_f32.sqrt()) / 6.0;
+        let f2: f64 = 0.5 * (3.0_f64.sqrt() - 1.0);
+        let g2: f64 = (3.0 - 3.0_f64.sqrt()) / 6.0;
     
         // Skew the input space to determine which simplex cell we're in
         let s = (xin + yin) * f2; // Hairy factor for 2D
         let i = (xin + s).floor() as isize;
         let j = (yin + s).floor() as isize;
-        let t = (i as f32 + j as f32) * g2;
-        let x0 = xin - i as f32 + t; // The x,y distances from the cell origin, unskewed.
-        let y0 = yin - j as f32 + t;
+        let t = (i as f64 + j as f64) * g2;
+        let x0 = xin - i as f64 + t; // The x,y distances from the cell origin, unskewed.
+        let y0 = yin - j as f64 + t;
         // For the 2D case, the simplex shape is an equilateral triangle.
         // Determine which simplex we are in.
         let (i1, j1) = // Offsets for second (middle) corner of simplex in (i,j) coords
@@ -134,8 +134,8 @@ impl NoiseGenerator {
         // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
         // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
         // c = (3 - sqrt(3)) / 6
-        let x1 = x0 - i1 as f32 + g2; // Offsets for middle corner in (x,y) unskewed coords
-        let y1 = y0 - j1 as f32 + g2;
+        let x1 = x0 - i1 as f64 + g2; // Offsets for middle corner in (x,y) unskewed coords
+        let y1 = y0 - j1 as f64 + g2;
         let x2 = x0 - 1.0 + 2.0 * g2; // Offsets for last corner in (x,y) unskewed coords
         let y2 = y0 - 1.0 + 2.0 * g2;
         // Work out the hashed gradient indices of the three simplex corners
@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn reproducible() {
         let mut generator = NoiseGenerator::new(15122);
-        let vals: Vec<f32> = (0..112341).map(|i| generator.simplex(i as f32)).collect();
+        let vals: Vec<f64> = (0..112341).map(|i| generator.simplex(i as f64)).collect();
         assert_eq!(format!("{:.10}", vals.last().unwrap()), "0.8608906865");
     }
 }

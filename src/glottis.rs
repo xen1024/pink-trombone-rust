@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::f64::consts::PI;
 use serde::{Serialize, Deserialize};
 use schemars::{JsonSchema};
 use noise::ThreadRng;
@@ -18,10 +18,10 @@ pub struct Glottis {
     pub always_voice: bool,
     pub auto_wobble: bool,
     is_touched: bool,
-    pub target_tenseness: f32,
-    pub target_frequency: f32,
-    pub vibrato_amount: f32,
-    pub vibrato_frequency: f32,
+    pub target_tenseness: f64,
+    pub target_frequency: f64,
+    pub vibrato_amount: f64,
+    pub vibrato_frequency: f64,
 
     pub random: Option<ThreadRng>,
 
@@ -32,30 +32,30 @@ pub struct Glottis {
 
     sample_rate: u32,
     sample_count: u64,
-    pub intensity: f32,
-    pub loudness: f32,
-    smooth_frequency: f32,
-    time_in_waveform: f32,
-    old_tenseness: f32,
-    new_tenseness: f32,
-    old_frequency: f32,
-    new_frequency: f32,
+    pub intensity: f64,
+    pub loudness: f64,
+    smooth_frequency: f64,
+    time_in_waveform: f64,
+    old_tenseness: f64,
+    new_tenseness: f64,
+    old_frequency: f64,
+    new_frequency: f64,
 
 //    #[serde(skip)]
 //    aspiration_noise_source1: Option<Box<dyn FnMut() -> f64 + Send + 'static>>,
     #[serde(skip)]
     aspiration_noise_source: Box<dyn FnMut() -> f64 + Send + 'static>,
 
-    waveform_length: f32,
+    waveform_length: f64,
 
     // waveform state
-    alpha: f32,
-    e0: f32,
-    epsilon: f32,
-    shift: f32,
-    delta: f32,
-    te: f32,
-    omega: f32,
+    alpha: f64,
+    e0: f64,
+    epsilon: f64,
+    shift: f64,
+    delta: f64,
+    te: f64,
+    omega: f64,
 }
 
 impl Glottis {
@@ -119,13 +119,13 @@ impl Glottis {
         glottis
     }
 
-    pub fn set_musical_note(&mut self, semitone: f32) {
-        const A4: f32 = 440.0;
-        self.target_frequency = A4 * 2.0_f32.powf(semitone * (1.0 / 12.0));
+    pub fn set_musical_note(&mut self, semitone: f64) {
+        const A4: f64 = 440.0;
+        self.target_frequency = A4 * 2.0_f64.powf(semitone * (1.0 / 12.0));
     }
 
-    pub fn step(&mut self, lambda: f32) -> f32 {
-        let time = self.sample_count as f32 / self.sample_rate as f32;
+    pub fn step(&mut self, lambda: f64) -> f64 {
+        let time = self.sample_count as f64 / self.sample_rate as f64;
 
         if self.time_in_waveform > self.waveform_length {
             self.time_in_waveform -= self.waveform_length;
@@ -135,10 +135,10 @@ impl Glottis {
         let out1 = self.normalized_lf_waveform(self.time_in_waveform / self.waveform_length);
 /*        let asp_noise = 
         match self.aspiration_noise_source.as_mut() {
-            Some(f) => (f)() as f32,
+            Some(f) => (f)() as f64,
             None => 0.0
         };*/
-        let asp_noise = (self.aspiration_noise_source)() as f32;
+        let asp_noise = (self.aspiration_noise_source)() as f64;
         let aspiration1 = self.intensity
             * (1.0 - self.target_tenseness.sqrt())
             * self.get_noise_modulator()
@@ -146,27 +146,27 @@ impl Glottis {
         let aspiration2 = aspiration1 * (0.2 + 0.02 * self.noise_generator.simplex(time * 1.99));
         let result = out1 + aspiration2;
         self.sample_count += 1;
-        self.time_in_waveform += 1.0 / self.sample_rate as f32;
+        self.time_in_waveform += 1.0 / self.sample_rate as f64;
         result
     }
 
-    pub fn get_noise_modulator(&self) -> f32 {
+    pub fn get_noise_modulator(&self) -> f64 {
         let voiced =
-            0.1 + 0.2 * 0_f32.max((PI * 2.0 * self.time_in_waveform / self.waveform_length).sin());
+            0.1 + 0.2 * 0_f64.max((PI * 2.0 * self.time_in_waveform / self.waveform_length).sin());
         self.target_tenseness * self.intensity * voiced
             + (1.0 - self.target_tenseness * self.intensity) * 0.3
     }
 
-    pub fn adjust_parameters(&mut self, delta_time: f32) {
-        let delta = delta_time * self.sample_rate as f32 / 512.0;
-        let old_time = self.sample_count as f32 / self.sample_rate as f32;
+    pub fn adjust_parameters(&mut self, delta_time: f64) {
+        let delta = delta_time * self.sample_rate as f64 / 512.0;
+        let old_time = self.sample_count as f64 / self.sample_rate as f64;
         let new_time = old_time + delta_time;
         self.adjust_intensity(delta);
         self.calculate_new_frequency(new_time, delta);
         self.calculate_new_tenseness(new_time);
     }
 
-    fn calculate_new_frequency(&mut self, time: f32, delta_time: f32) {
+    fn calculate_new_frequency(&mut self, time: f64, delta_time: f64) {
         if self.intensity == 0.0 {
             self.smooth_frequency = self.target_frequency;
         } else if self.target_frequency > self.smooth_frequency {
@@ -184,7 +184,7 @@ impl Glottis {
             (self.smooth_frequency * (1.0 + self.calculate_vibrato(time))).max(10.0);
     }
 
-    fn calculate_new_tenseness(&mut self, time: f32) {
+    fn calculate_new_tenseness(&mut self, time: f64) {
         self.old_tenseness = self.new_tenseness;
         self.new_tenseness = self.target_tenseness
             + 0.1 * self.noise_generator.simplex(time * 0.46)
@@ -197,7 +197,7 @@ impl Glottis {
         }
     }
 
-    fn adjust_intensity(&mut self, delta: f32) {
+    fn adjust_intensity(&mut self, delta: f64) {
         if self.is_touched || self.always_voice {
             self.intensity += 0.13 * delta;
         } else {
@@ -207,7 +207,7 @@ impl Glottis {
         self.intensity = self.intensity.clamp(0.0, 1.0);
     }
 
-    fn calculate_vibrato(&mut self, time: f32) -> f32 {
+    fn calculate_vibrato(&mut self, time: f64) -> f64 {
         let mut vibrato = self.vibrato_amount * (PI * 2.0 * time * self.vibrato_frequency).sin();
         vibrato += 0.02 * self.noise_generator.simplex(time * 4.07);
         vibrato += 0.04 * self.noise_generator.simplex(time * 2.15);
@@ -218,7 +218,7 @@ impl Glottis {
         vibrato
     }
 
-    fn setup_waveform(&mut self, lambda: f32) {
+    fn setup_waveform(&mut self, lambda: f64) {
         let frequency = interpolate(self.old_frequency, self.new_frequency, lambda);
         let tenseness = interpolate(self.old_tenseness, self.new_tenseness, lambda);
         self.waveform_length = 1.0 / frequency;
@@ -270,7 +270,7 @@ impl Glottis {
         self.omega = omega;
     }
 
-    fn normalized_lf_waveform(&self, t: f32) -> f32 {
+    fn normalized_lf_waveform(&self, t: f64) -> f64 {
         let output = if t > self.te {
             (-(-self.epsilon * (t - self.te)).exp() + self.shift) / self.delta
         } else {

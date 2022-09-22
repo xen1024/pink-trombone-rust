@@ -22,7 +22,7 @@ pub struct Tract {
     frication_noise_source: Box<dyn FnMut() -> f64 + Send + 'static>,
 
     sample_count: usize,
-    pub time: f32,
+    pub time: f64,
 
     #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
@@ -241,7 +241,7 @@ impl Tract {
         }
     }
 
-    pub fn step(&mut self, glottal_output: f64, lambda: f64) -> f32 {
+    pub fn step(&mut self, glottal_output: f64, lambda: f64) -> f64 {
         // mouth
         self.process_transients();
         self.add_turbulence_noise();
@@ -306,9 +306,9 @@ impl Tract {
         let nose_output = self.nose_right[NOSE_LEN - 1];
 
         self.sample_count += 1;
-        self.time = self.sample_count as f32 / self.sample_rate as f32;
+        self.time = self.sample_count as f64 / self.sample_rate as f64;
 
-        (lip_output + nose_output) as f32
+        (lip_output + nose_output) as f64
     }
 
     fn process_transients(&mut self) {
@@ -328,19 +328,19 @@ impl Tract {
     }
 
     fn add_turbulence_noise(&mut self) {
-        const FRICATIVE_ATTACK_TIME: f32 = 0.1; // seconds
+        const FRICATIVE_ATTACK_TIME: f64 = 0.1; // seconds
 
         let mut turbulence_noises = Vec::<(f64, f64, f64)>::new();
 
         for p in &self.turbulence_points {
-            if p.position < 2.0 || p.position > N as f32 {
+            if p.position < 2.0 || p.position > N as f64 {
                 continue;
             }
             if p.diameter <= 0.0 {
                 continue;
             }
 
-            let intensity = if f32::is_nan(p.end_time) {
+            let intensity = if f64::is_nan(p.end_time) {
                 (self.time - p.start_time) / FRICATIVE_ATTACK_TIME
             } else {
                 1.0 - (self.time - p.end_time) / FRICATIVE_ATTACK_TIME

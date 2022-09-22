@@ -14,8 +14,8 @@ big_array! { BigArray; N }
 #[serde(rename = "TractShaperJSON")]
 pub struct TractShaper {
     pub tract: Tract,
-    velum_open_target: f32,
-    velum_closed_target: f32,
+    velum_open_target: f64,
+    velum_closed_target: f64,
 
     #[cfg(not(feature = "jsonse"))]
     #[serde(with = "BigArray")]
@@ -24,7 +24,7 @@ pub struct TractShaper {
     #[cfg(feature = "jsonse")]
     target_diameter: [f64; Tract::N],
 
-    velum_target: f32,
+    velum_target: f64,
     pub tongue_index: f64,
     pub tongue_diameter: f64,
     last_obstruction: i32,
