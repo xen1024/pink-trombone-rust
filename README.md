@@ -27,7 +27,9 @@ You can easily connect Pink Trombone to any audio framework, that accepts
 See example/pink-trombone.rs generate_test_data
 
 ```
+make prepare
 make json
+make plist
 ```
 
 ### Export JSON-schema for quicktype.io
