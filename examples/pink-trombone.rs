@@ -11,9 +11,10 @@ use schemars::{schema_for, JsonSchema};
 
 big_array! { BigArray; N }
 
-#[derive(Clone)]
+//#[derive(Clone)]
 struct PinkTromboneSource {
-    trombone: Arc<Mutex<PinkTrombone>>,
+//    trombone: Arc<Mutex<PinkTrombone>>,
+    trombone: PinkTrombone,
     buffer_pos: usize,
     buffer: [f64; 512],
 }
@@ -22,7 +23,8 @@ impl PinkTromboneSource {
     pub fn new(trombone: PinkTrombone) -> PinkTromboneSource {
         let buffer = [0_f64; 512];
         PinkTromboneSource {
-            trombone: Arc::new(Mutex::new(trombone)),
+//            trombone: Arc::new(Mutex::new(trombone)),
+            trombone: trombone,
             buffer_pos: buffer.len(),
             buffer,
         }
@@ -33,7 +35,8 @@ impl Iterator for PinkTromboneSource {
     type Item = f32;
     fn next(&mut self) -> Option<f32> {
         if self.buffer_pos == self.buffer.len() {
-            self.trombone.lock().unwrap().synthesize(&mut self.buffer);
+//            self.trombone.lock().unwrap().synthesize(&mut self.buffer);
+            self.trombone.synthesize(&mut self.buffer);
             self.buffer_pos = 0;
         }
         let result = self.buffer[self.buffer_pos];
@@ -53,7 +56,8 @@ impl Source for PinkTromboneSource {
     }
 
     fn sample_rate(&self) -> u32 {
-        self.trombone.lock().unwrap().sample_rate()
+//        self.trombone.lock().unwrap().sample_rate()
+        self.trombone.sample_rate()
     }
 
     fn total_duration(&self) -> Option<std::time::Duration> {
@@ -73,12 +77,15 @@ pub struct InputOutputBuffer {
     mutated_buf: Vec<f64>,
 }
 
+use std::sync::MutexGuard;
+
 fn generate_test_data() {
 
     let output_path = "test_data.json";
     let output_path_glottis0 = "glottis0.json";
     let output_path_glottis1 = "glottis1.json";
     let output_path_trombone0 = "trombone0.json";
+    let output_path_trombone0_1 = "trombone0_1.json";
 
     let output_path_tract_shape0 = "tract_shape0.json";
     let output_path_tract0 = "tract0.json";
@@ -101,7 +108,37 @@ fn generate_test_data() {
 
     trombone.shaper.tract.glottis.random = Some(rng);
 
-    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
+//    std::fs::write(output_path_trombone0,serde_json::to_string_pretty(&trombone).unwrap()).unwrap();
+
+    let mut source = PinkTromboneSource::new(trombone);
+
+    let mut samples: Vec<f64> = Vec::new();
+
+    for tone in 0..24 {
+
+/*        {
+            let mut src = source.trombone.lock().unwrap();
+            src.set_musical_note(tone as f64);
+        }*/
+
+        source.trombone.set_musical_note(tone as f64);
+
+        for round in 0..8 {
+            for i in 0..512 {
+                let sample = source.next();
+                samples.push(sample.unwrap() as f64);
+
+//                println!("{tone:?} {round:?} {i:?} {sample:?}")
+            }
+        }
+    }
+    
+//    let mut trombone = source.trombone;
+//    let mut src = source.trombone.lock().unwrap();
+
+    source.trombone.samples = Some(samples);
+
+    std::fs::write(output_path_trombone0_1,serde_json::to_string_pretty(&source.trombone).unwrap()).unwrap();
 
 /*
     std::fs::write(output_path_tract_shape0,serde_json::to_string_pretty(&trombone.shaper).unwrap()).unwrap();
@@ -163,12 +200,12 @@ fn main() {
     let seed = rand::thread_rng().gen();
     let trombone = PinkTrombone::new(SAMPLE_RATE, &mut random, seed);
     let source = PinkTromboneSource::new(trombone);
-
+/*
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     stream_handle.play_raw(source.clone()).unwrap();
-
-
-/*    for tone in 0..24 {
+*/
+/*
+    for tone in 0..24 {
         {
             let mut src = source.trombone.lock().unwrap();
             src.set_musical_note(tone as f64);
@@ -182,5 +219,6 @@ fn main() {
             src.set_musical_note(tone as f64);
         }
         std::thread::sleep(std::time::Duration::from_millis(300));
-    }*/
+    }
+    */
 }

@@ -15,6 +15,8 @@ use schemars::{JsonSchema};
 pub struct PinkTrombone {
     pub shaper: TractShaper,
     pub sample_rate: u32,
+
+    pub samples: Option<Vec<f64>> // samples for testing
 }
 
 impl PinkTrombone {
@@ -31,6 +33,7 @@ impl PinkTrombone {
         PinkTrombone {
             sample_rate,
             shaper: TractShaper::new(tract),
+            samples: None
         }
     }
 
