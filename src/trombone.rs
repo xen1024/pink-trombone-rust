@@ -33,7 +33,7 @@ impl PinkTrombone {
         PinkTrombone {
             sample_rate,
             shaper: TractShaper::new(tract),
-            samples: None
+            samples: Some(vec![])
         }
     }
 
